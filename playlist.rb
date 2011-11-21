@@ -2,5 +2,5 @@ require 'sinatra'
 
 
 get '/hi' do
-  "Hellog World"
+  "Hello pepe World"
 end
