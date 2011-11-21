@@ -21,7 +21,7 @@ end
 session.login!(settings.spotify_username, settings.spotify_password)
 
 get '/hi' do
-  settings.pepe
+  'holasettings.pepe'
 end
 
 # TODO: using heroku logs
