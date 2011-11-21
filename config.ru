@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'bundler'
 
-Bundler.requireg
 
 require './playlist'
 
