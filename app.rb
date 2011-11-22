@@ -11,7 +11,7 @@ require './config/spotify_config'
 
 
 if settings.is_heroku 
-  require '../heroku/spotify_heroku'
+  require './heroku/spotify_heroku'
 end
 
 
