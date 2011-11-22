@@ -2,6 +2,6 @@ require 'rubygems'
 require 'bundler'
 
 
-require './playlist'
+require './app'
 
 run Sinatra::Application
