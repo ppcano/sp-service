@@ -1,23 +1,21 @@
 require 'sinatra'
 require 'json'
 
-#require './vendor/hallon-0.9.0/lib/hallon'
-# done
-# updated:
-#    hallon.rb
-#    spotify.rb
-
-require './config/spotify_config'
+require './config/config'
 
 
 if settings.is_heroku 
+  puts 'running on heroku........'
   require './heroku/spotify_heroku'
 end
 
 
 require 'hallon'
 
-session = Hallon::Session.initialize IO.read('./config/spotify_appkey.key') do
+
+appkey = IO.read('./config/spotify_appkey.key')
+session = Hallon::Session.initialize(appkey, settings_path: "tmp/settings", cache_path: "tmp/spotifycache") do
+#session = Hallon::Session.initialize IO.read('./config/spotify_appkey.key') do
   on(:log_message) do |message|
     puts "[LOG] #{message}"
   end
@@ -33,54 +31,61 @@ end
 
 session.login!(settings.spotify_username, settings.spotify_password)
 
+before do
+
+  content_type :json, :charset => 'utf-8'
+
+end
+
+
 
 get '/playlist/:playlisturi' do
 
-  playlist_uri = params[:playlisturi]
 
   begin
 
-  playlist = Hallon::Playlist.new(playlist_uri)
-
-
+  playlist = Hallon::Playlist.new(params[:playlisturi])
   session.wait_for { playlist.loaded? }
-
-  num_tracks = playlist.tracks.size
   
+  #http://yehudakatz.com/2010/05/05/ruby-1-9-encodings-a-primer-and-the-solution-for-rails/
   js_tracks = Array.new
   playlist.tracks.each_with_index do |track, i|
+
         session.wait_for { track.loaded? }
 
         album = track.album
         session.wait_for { album.loaded? }
+        
+        #Spotify::Pointer address=0x00000000000000> is not a valid spotify link URI or pointer
+        #js_album = {:title=> album.name, :image=> album.cover(false).to_str }    
+        js_album = { :title=> album.name.force_encoding("UTF-8") }    
 
-        js_album = {:title=> album.name, :image=> album.cover(false).to_str }    
         js_artists = Array.new
-
         track.artists.each_with_index do |artist, j|
           session.wait_for { artist.loaded? }
           
-          js_artists.push( { :title=> artist.name} )
+          js_artists.push( { :title=> artist.name.force_encoding("UTF-8")} )
 
         end
-        js_tracks.push( { :title=> track.name, :uri=> track.to_link.to_str, :album=> js_album, :artists=>js_artists} )
+
+       js_tracks.push( { :title=> track.name.force_encoding("UTF-8"), :uri=> track.to_link.to_str, :album=> js_album, :artists=>js_artists} )
 
   end
 
-
-  content_type :json
-    {:uri=> playlist.to_link.to_str, :title=> playlist.name , :tracks => js_tracks}.to_json
+    #{:uri=> playlist.to_link.to_str, :title=> playlist.name.force_encoding("UTF-8"), :tracks => js_tracks}.to_json
+    #{  :title=> playlist.name }.to_json
   
+    puts 'ending.............................here...'
 
   rescue => e
      puts e.message
+     puts e.backtrace
 
-    404
+     halt 404
 
   end
 
-
-
+  {:uri=> playlist.to_link.to_str, :title=> playlist.name.force_encoding("UTF-8"), :tracks => js_tracks}.to_json
 
 end
 
