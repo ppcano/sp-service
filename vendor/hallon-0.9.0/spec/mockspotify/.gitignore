@@ -1,5 +1,0 @@
-[^.]*
-!.gitignore
-!extconf.rb
-!libmockspotify
-!mockspotify_spec.rb

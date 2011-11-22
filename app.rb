@@ -9,16 +9,10 @@ require 'json'
 
 require './config/spotify_config'
 
-puts 'ppcano'
-puts settings.is_heroku
 
 if settings.is_heroku 
-
-  puts 'inside'
   require './spotify_heroku'
-
 end
-
 
 
 require 'hallon'
