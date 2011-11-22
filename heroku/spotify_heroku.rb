@@ -5,7 +5,7 @@ module Spotify
   module Heroku
     # @return [String] path to the libmockspotify C extension binary.
     def self.path
-      File.expand_path('../heroku/libspotify.so', __FILE__)
+      File.expand_path('../libspotify.so', __FILE__)
     end
 
     # Overridden to always ffi_lib the right path.
