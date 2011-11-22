@@ -1,7 +1,23 @@
 require 'sinatra'
 require 'json'
 require 'hallon'
+
+#require './vendor/hallon-0.9.0/lib/hallon'
+# done
+# updated:
+#    hallon.rb
+#    spotify.rb
 require './config/spotify_config'
+
+puts 'ppcano'
+puts settings.is_heroku
+
+if settings.is_heroku 
+
+  puts 'inside'
+  require './spotify_heroku'
+
+end
 
 
 session = Hallon::Session.initialize IO.read('./config/spotify_appkey.key') do

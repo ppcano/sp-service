@@ -2,4 +2,5 @@ source 'http://rubygems.org'
 
 gem 'sinatra'
 gem 'json'
-#gem 'hallon' in vendor
+gem 'ffi'
+gem 'hallon' 

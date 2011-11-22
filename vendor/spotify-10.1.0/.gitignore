@@ -1,0 +1,7 @@
+*.rbc
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
+doc/
+.yardoc
