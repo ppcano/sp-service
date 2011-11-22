@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
 
 gem 'sinatra'
-gem 'hallon'
 gem 'json'
+#gem 'hallon' in vendor
